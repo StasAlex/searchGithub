@@ -1,3 +1,23 @@
-<p>
-  search works!
-</p>
+<div class="search-container">
+  <form [formGroup]="userForm">
+    <mat-form-field class="form-field">
+      <input matInput type="text" placeholder="Search for  Github user" formControlName="userName">
+      <button mat-button *ngIf="formValue" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <mat-icon aria-hidden="false">close</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+  <div *ngFor="let card of (userStream$ | async)">
+
+    <div class="card">
+      <div class="card-header">
+        <img class="card-avatar" src="{{ card.avatar_url }}" alt="Photo of User">
+        <span class="card-title">{{ card.login }}</span>
+      </div>
+      <img src="{{ card.avatar_url }}" alt="Photo of User">
+      <div class="card-actions">
+        <a class="button" href="{{card.html_url}}" target="_blank">Open Github</a>
+      </div>
+    </div>
+  </div>
+</div>
