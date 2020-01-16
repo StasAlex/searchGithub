@@ -8,13 +8,12 @@
     </mat-form-field>
   </form>
   <div *ngFor="let card of (userStream$ | async)">
-
     <div class="card">
       <div class="card-header">
         <img class="card-avatar" src="{{ card.avatar_url }}" alt="Photo of User">
         <span class="card-title">{{ card.login }}</span>
       </div>
-      <img src="{{ card.avatar_url }}" alt="Photo of User">
+      <img class="main-img"src="{{ card.avatar_url }}" alt="Photo of User">
       <div class="card-actions">
         <a class="button" href="{{card.html_url}}" target="_blank">Open Github</a>
       </div>
