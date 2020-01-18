@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { FormControl, FormGroup } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, pluck, catchError, filter } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 
 @Component({
@@ -24,8 +25,18 @@ export class SearchComponent implements OnInit {
     pluck('userName'), // берет из потока ключи полей userName
     distinctUntilChanged(), // сравнивает элемент потока с предыдущим
     // и испускает только значения, отличающиеся от предыдущего
-    switchMap(v => this.http.get(this.url + v)), // формирует новый поток  - берет значение
-    // из предыдущего и вставляет в новый поток
+    filter(v => v.trim()), // фильтруем стрим от пустых значений
+    // не отправляет запрос если внутри пустое значение и
+    // userName = ""
+    switchMap(v =>
+      this.http
+        .get(this.url + v) // формирует новый поток  - берет значение
+                          // из предыдущего и вставляет в новый поток
+        .pipe(
+          catchError(err => EMPTY) // обрабатывает ошибку если отправляется
+          // запрос с пустым значением
+        )
+    ),
     pluck('items') // берет из потока ключи полей items
   );
 
